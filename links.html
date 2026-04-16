@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BillBasic Digital — Mes Offres</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+
+  body {
+    background:#050f05;
+    color:#fff;
+    font-family:'Outfit', sans-serif;
+    min-height:100vh;
+    overflow-x:hidden;
+  }
+
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background-image:
+      linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+    background-size:40px 40px;
+    pointer-events:none; z-index:0;
+  }
+
+  .wrap {
+    position:relative; z-index:1;
+    max-width:480px;
+    margin:0 auto;
+    padding:40px 20px 60px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:0;
+  }
+
+  /* AVATAR */
+  .avatar {
+    width:80px; height:80px;
+    border-radius:50%;
+    border:2px solid #39FF14;
+    box-shadow:0 0 20px rgba(57,255,20,0.4);
+    background:#0a1a0a;
+    display:flex; align-items:center; justify-content:center;
+    font-size:32px;
+    margin-bottom:14px;
+    overflow:hidden;
+  }
+
+  .avatar img { width:100%; height:100%; object-fit:cover; }
+
+  /* NAME */
+  .name {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:2rem;
+    letter-spacing:0.08em;
+    color:#fff;
+    margin-bottom:4px;
+  }
+
+  .name span { color:#39FF14; }
+
+  .tagline {
+    font-size:0.82rem;
+    color:#8aad8a;
+    text-align:center;
+    margin-bottom:8px;
+    letter-spacing:0.04em;
+  }
+
+  /* LIVE BADGE */
+  .live-badge {
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:#000;
+    border:1.5px solid #ff0050;
+    color:#fff;
+    font-size:0.72rem;
+    font-weight:800;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    padding:6px 16px;
+    border-radius:20px;
+    margin-bottom:36px;
+    box-shadow:0 0 14px rgba(255,0,80,0.35), 2px 0 0 #69c9d0, -2px 0 0 #ff0050;
+  }
+
+  .live-dot {
+    width:7px; height:7px;
+    border-radius:50%;
+    background:#ff0050;
+    animation:pulse 1s ease-in-out infinite;
+    box-shadow:0 0 6px #ff0050;
+  }
+
+  @keyframes pulse {
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.4; transform:scale(0.7); }
+  }
+
+  /* SECTION LABEL */
+  .section-label {
+    font-size:0.68rem;
+    font-weight:700;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    color:#39FF14;
+    margin-bottom:16px;
+    text-align:center;
+    width:100%;
+  }
+
+  /* CARDS */
+  .card {
+    width:100%;
+    background:#0d1f0d;
+    border:1px solid rgba(57,255,20,0.2);
+    border-radius:16px;
+    padding:22px 20px;
+    margin-bottom:14px;
+    text-decoration:none;
+    display:block;
+    transition:transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .card::before {
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:2px;
+    background:linear-gradient(90deg, transparent, #39FF14, transparent);
+    opacity:0;
+    transition:opacity 0.2s;
+  }
+
+  .card:hover {
+    transform:translateY(-3px);
+    box-shadow:0 8px 30px rgba(57,255,20,0.15);
+    border-color:rgba(57,255,20,0.45);
+  }
+
+  .card:hover::before { opacity:1; }
+
+  .card-tag {
+    font-size:0.65rem;
+    font-weight:700;
+    letter-spacing:0.15em;
+    text-transform:uppercase;
+    color:#39FF14;
+    margin-bottom:8px;
+    display:flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  .card-tag span {
+    background:rgba(57,255,20,0.1);
+    padding:2px 8px;
+    border-radius:10px;
+    border:1px solid rgba(57,255,20,0.2);
+  }
+
+  .card-title {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.5rem;
+    letter-spacing:0.04em;
+    color:#fff;
+    line-height:1.1;
+    margin-bottom:8px;
+  }
+
+  .card-desc {
+    font-size:0.82rem;
+    color:#8aad8a;
+    line-height:1.6;
+    margin-bottom:14px;
+  }
+
+  .card-footer {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+
+  .card-price {
+    font-family:'Bebas Neue', sans-serif;
+    font-size:1.8rem;
+    color:#39FF14;
+    text-shadow:0 0 16px rgba(57,255,20,0.3);
+    line-height:1;
+  }
+
+  .card-price .period {
+    font-family:'Outfit', sans-serif;
+    font-size:0.72rem;
+    color:#8aad8a;
+    font-weight:500;
+    display:block;
+    margin-top:2px;
+  }
+
+  .card-arrow {
+    width:36px; height:36px;
+    border-radius:50%;
+    background:rgba(57,255,20,0.1);
+    border:1px solid rgba(57,255,20,0.3);
+    display:flex; align-items:center; justify-content:center;
+    font-size:16px;
+    transition:background 0.2s;
+  }
+
+  .card:hover .card-arrow {
+    background:rgba(57,255,20,0.2);
+  }
+
+  /* CARD GOLD (coaching) */
+  .card.gold {
+    background:#1a1400;
+    border-color:rgba(245,197,24,0.25);
+  }
+
+  .card.gold::before {
+    background:linear-gradient(90deg, transparent, #f5c518, transparent);
+  }
+
+  .card.gold:hover {
+    box-shadow:0 8px 30px rgba(245,197,24,0.15);
+    border-color:rgba(245,197,24,0.5);
+  }
+
+  .card.gold .card-tag { color:#f5c518; }
+  .card.gold .card-tag span {
+    background:rgba(245,197,24,0.1);
+    border-color:rgba(245,197,24,0.2);
+  }
+
+  .card.gold .card-price {
+    color:#f5c518;
+    text-shadow:0 0 16px rgba(245,197,24,0.3);
+  }
+
+  .card.gold .card-arrow {
+    background:rgba(245,197,24,0.1);
+    border-color:rgba(245,197,24,0.3);
+  }
+
+  .card.gold:hover .card-arrow {
+    background:rgba(245,197,24,0.2);
+  }
+
+  /* CARD BLUE (marketing) */
+  .card.blue {
+    background:#0a0f1a;
+    border-color:rgba(144,205,244,0.25);
+  }
+
+  .card.blue::before {
+    background:linear-gradient(90deg, transparent, #90cdf4, transparent);
+  }
+
+  .card.blue:hover {
+    box-shadow:0 8px 30px rgba(144,205,244,0.15);
+    border-color:rgba(144,205,244,0.5);
+  }
+
+  .card.blue .card-tag { color:#90cdf4; }
+  .card.blue .card-tag span {
+    background:rgba(144,205,244,0.1);
+    border-color:rgba(144,205,244,0.2);
+  }
+
+  .card.blue .card-price {
+    color:#90cdf4;
+    text-shadow:0 0 16px rgba(144,205,244,0.3);
+  }
+
+  .card.blue .card-arrow {
+    background:rgba(144,205,244,0.1);
+    border-color:rgba(144,205,244,0.3);
+  }
+
+  .card.blue:hover .card-arrow {
+    background:rgba(144,205,244,0.2);
+  }
+
+  /* DIVIDER */
+  .divider {
+    width:100%;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin:10px 0 20px;
+  }
+
+  .divider-line {
+    flex:1;
+    height:1px;
+    background:rgba(57,255,20,0.12);
+  }
+
+  .divider-txt {
+    font-size:0.65rem;
+    color:#8aad8a;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+
+  /* SOCIAL */
+  .social {
+    display:flex;
+    gap:10px;
+    margin-top:28px;
+  }
+
+  .social-btn {
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#0d1f0d;
+    border:1px solid rgba(57,255,20,0.2);
+    color:#8aad8a;
+    font-size:0.75rem;
+    font-weight:600;
+    padding:8px 16px;
+    border-radius:20px;
+    text-decoration:none;
+    transition:all 0.2s;
+    letter-spacing:0.04em;
+  }
+
+  .social-btn:hover {
+    border-color:rgba(57,255,20,0.5);
+    color:#39FF14;
+  }
+
+  .social-btn.insta {
+    background: linear-gradient(135deg, #1a0a0f, #150a1a);
+    border: 1px solid rgba(238,42,123,0.35);
+    color: #ee2a7b;
+    padding: 10px 22px;
+    font-size: 0.8rem;
+  }
+
+  .social-btn.insta:hover {
+    border-color: rgba(238,42,123,0.7);
+    color: #f96daa;
+    box-shadow: 0 0 16px rgba(238,42,123,0.2);
+  }
+  .footer {
+    margin-top:32px;
+    font-size:0.68rem;
+    color:rgba(138,173,138,0.4);
+    text-align:center;
+    letter-spacing:0.06em;
+  }
+
+  /* POPULAR BADGE */
+  .popular {
+    position:absolute;
+    top:14px; right:14px;
+    background:#39FF14;
+    color:#050f05;
+    font-size:0.58rem;
+    font-weight:800;
+    letter-spacing:0.12em;
+    text-transform:uppercase;
+    padding:3px 10px;
+    border-radius:10px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- AVATAR + NOM -->
+  <div class="avatar">💡</div>
+  <div class="name">Bill<span>Basic</span> Digital</div>
+  <div class="tagline">Marketing Digital · Avatar IA · Business en ligne</div>
+
+  <div class="live-badge">
+    <div class="live-dot"></div>
+    Vu sur mon live TikTok
+  </div>
+
+  <!-- OFFRE 1 -->
+  <div class="section-label">🎓 Formation</div>
+
+  <a href="https://billbasic-digital.mychariow.shop/prd_zar3i8" target="_blank" class="card">
+    <div class="popular">⭐ Populaire</div>
+    <div class="card-tag"><span>Formation complète</span></div>
+    <div class="card-title">Créer ton Avatar IA &amp; Gagner de l'argent</div>
+    <div class="card-desc">7 modules · Méthode complète pour créer des avatars IA sans abonnement · Droit de revente inclus — tu gardes 100% des bénéfices.</div>
+    <div class="card-footer">
+      <div class="card-price">50 €<span class="period">accès à vie · revente incluse</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </a>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-txt">Accompagnement</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- OFFRE 2 -->
+  <a href="https://billbasic-digital.mychariow.shop/prd_aord0q" target="_blank" class="card gold">
+    <div class="card-tag"><span>🤝 Coaching 1:1</span></div>
+    <div class="card-title">Accompagnement Business en ligne</div>
+    <div class="card-desc">Session directe avec Bill — on construit ensemble ta stratégie : niche, TikTok, produit digital. Résultats rapides et personnalisés.</div>
+    <div class="card-footer">
+      <div class="card-price">70 €<span class="period">session personnalisée</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </a>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-txt">Guide gratuit</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <!-- OFFRE 3 -->
+  <a href="https://billbasicmarketing.fr" target="_blank" class="card blue">
+    <div class="card-tag"><span>📚 Guide 2026</span></div>
+    <div class="card-title">Comprendre les bases du Marketing Digital</div>
+    <div class="card-desc">Guide complet gratuit — niches, plateformes, outils, stratégies pour le marché francophone. + Ebook disponible à 10,50€.</div>
+    <div class="card-footer">
+      <div class="card-price">Gratuit<span class="period">accès immédiat</span></div>
+      <div class="card-arrow">→</div>
+    </div>
+  </a>
+
+  <!-- SOCIAL -->
+  <div class="social">
+    <a href="https://www.instagram.com/basic5.digital?igsh=MWUxZGExcXRtbjRlNA%3D%3D&utm_source=qr" target="_blank" class="social-btn insta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ig" x1="0" y1="24" x2="24" y2="0" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f9ce34"/>
+            <stop offset="30%" stop-color="#ee2a7b"/>
+            <stop offset="70%" stop-color="#9b27af"/>
+            <stop offset="100%" stop-color="#4f5bd5"/>
+          </linearGradient>
+        </defs>
+        <rect x="2" y="2" width="20" height="20" rx="6" stroke="url(#ig)" stroke-width="2"/>
+        <circle cx="12" cy="12" r="4.5" stroke="url(#ig)" stroke-width="2"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="url(#ig)"/>
+      </svg>
+      @basic5.digital
+    </a>
+  </div>
+
+  <div class="footer">BillBasic Digital · Tous droits réservés · 2026</div>
+
+</div>
+</body>
+</html>
