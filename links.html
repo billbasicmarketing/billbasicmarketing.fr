@@ -376,6 +376,68 @@
     padding:3px 10px;
     border-radius:10px;
   }
+
+  /* PLACES SYSTEM */
+  .places-wrap {
+    width:100%;
+    background:#0d1f0d;
+    border:1px solid rgba(57,255,20,0.15);
+    border-radius:10px;
+    padding:12px 14px;
+    margin-top:-6px;
+    margin-bottom:14px;
+  }
+  .places-wrap.gold {
+    background:#1a1400;
+    border-color:rgba(245,197,24,0.2);
+    margin-bottom:0;
+  }
+  .places-header {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:10px;
+  }
+  .places-title { font-size:0.72rem; font-weight:700; color:#8aad8a; }
+  .places-wrap.gold .places-title { color:#b8922a; }
+  .places-count { font-family:'Bebas Neue',sans-serif; font-size:1rem; color:#39FF14; }
+  .places-wrap.gold .places-count { color:#f5c518; }
+  .places-dots { display:flex; gap:6px; flex-wrap:wrap; }
+  .place-dot {
+    width:30px; height:30px;
+    border-radius:6px;
+    background:rgba(57,255,20,0.12);
+    border:1px solid rgba(57,255,20,0.35);
+    display:flex; align-items:center; justify-content:center;
+    font-size:13px; color:#39FF14; font-weight:700;
+    transition:all 0.6s ease;
+  }
+  .place-dot.taken { background:rgba(255,50,50,0.1); border-color:rgba(255,50,50,0.4); color:#ff5555; }
+  .places-wrap.gold .place-dot { background:rgba(245,197,24,0.12); border-color:rgba(245,197,24,0.35); color:#f5c518; }
+  .places-wrap.gold .place-dot.taken { background:rgba(255,50,50,0.1); border-color:rgba(255,50,50,0.4); color:#ff5555; }
+
+  /* NOTIFICATION POPUP */
+  .notif-popup {
+    position:fixed; bottom:20px; left:16px;
+    max-width:270px;
+    background:#0a1a0a;
+    border:1px solid rgba(57,255,20,0.4);
+    border-left:3px solid #39FF14;
+    border-radius:10px;
+    padding:12px 14px;
+    z-index:9999;
+    display:none;
+    box-shadow:0 4px 24px rgba(0,0,0,0.6);
+  }
+  .notif-popup.gold { border-color:rgba(245,197,24,0.4); border-left-color:#f5c518; }
+  .notif-popup.show { display:flex; gap:10px; align-items:flex-start; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-20px);}to{opacity:1;transform:translateX(0);} }
+  @keyframes slideOut { from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(-20px);} }
+  .notif-icon { font-size:20px; flex-shrink:0; }
+  .notif-title { font-size:0.75rem; font-weight:700; color:#39FF14; margin-bottom:3px; }
+  .notif-popup.gold .notif-title { color:#f5c518; }
+  .notif-desc { font-size:0.7rem; color:#8aad8a; line-height:1.4; }
+  .notif-time { font-size:0.62rem; color:rgba(138,173,138,0.45); margin-top:3px; }
 </style>
 </head>
 <body>
@@ -405,6 +467,15 @@
     </div>
   </a>
 
+  <!-- PLACES FORMATION -->
+  <div class="places-wrap">
+    <div class="places-header">
+      <span class="places-title">🟢 Places disponibles</span>
+      <span class="places-count" id="formation-count">8 / 8</span>
+    </div>
+    <div class="places-dots" id="formation-dots"></div>
+  </div>
+
   <div class="divider">
     <div class="divider-line"></div>
     <div class="divider-txt">Accompagnement</div>
@@ -421,6 +492,15 @@
       <div class="card-arrow">→</div>
     </div>
   </a>
+
+  <!-- PLACES ACCOMPAGNEMENT -->
+  <div class="places-wrap gold">
+    <div class="places-header">
+      <span class="places-title">🟡 Places du jour</span>
+      <span class="places-count" id="coaching-count">5 / 5</span>
+    </div>
+    <div class="places-dots" id="coaching-dots"></div>
+  </div>
 
   <div class="divider">
     <div class="divider-line"></div>
@@ -462,5 +542,99 @@
   <div class="footer">BillBasic Digital · Tous droits réservés · 2026</div>
 
 </div>
+
+<!-- NOTIFICATION POPUP -->
+<div class="notif-popup" id="notif-popup">
+  <div class="notif-icon" id="notif-icon">🎓</div>
+  <div class="notif-text">
+    <div class="notif-title" id="notif-title">Place prise !</div>
+    <div class="notif-desc" id="notif-desc">1 place vient d'être prise pour la formation</div>
+    <div class="notif-time">à l'instant</div>
+  </div>
+</div>
+
+<script>
+  // ── PLACES INIT ──
+  var formationMax = 8;
+  var coachingMax = 5;
+  var formationTaken = 0;
+  var coachingTaken = 0;
+
+  function buildDots(containerId, max, taken, isGold) {
+    var container = document.getElementById(containerId);
+    container.innerHTML = '';
+    for (var i = 0; i < max; i++) {
+      var dot = document.createElement('div');
+      dot.className = 'place-dot' + (i < taken ? ' taken' : '');
+      dot.textContent = i < taken ? '✕' : '✓';
+      container.appendChild(dot);
+    }
+  }
+
+  function updateCount(countId, max, taken) {
+    var remaining = max - taken;
+    document.getElementById(countId).textContent = remaining + ' / ' + max;
+  }
+
+  function takePlaceFormation() {
+    if (formationTaken < formationMax) {
+      formationTaken++;
+      buildDots('formation-dots', formationMax, formationTaken, false);
+      updateCount('formation-count', formationMax, formationTaken);
+    }
+  }
+
+  function takePlaceCoaching() {
+    if (coachingTaken < coachingMax) {
+      coachingTaken++;
+      buildDots('coaching-dots', coachingMax, coachingTaken, true);
+      updateCount('coaching-count', coachingMax, coachingTaken);
+    }
+  }
+
+  // Init dots
+  buildDots('formation-dots', formationMax, 0, false);
+  buildDots('coaching-dots', coachingMax, 0, true);
+
+  // ── NOTIFICATIONS ──
+  function showNotif(type) {
+    var popup = document.getElementById('notif-popup');
+    var icon = document.getElementById('notif-icon');
+    var title = document.getElementById('notif-title');
+    var desc = document.getElementById('notif-desc');
+
+    popup.classList.remove('gold');
+
+    if (type === 'formation') {
+      takePlaceFormation();
+      icon.textContent = '🎓';
+      title.textContent = '1 place prise !';
+      desc.textContent = 'Une place vient d\'être prise pour la formation Avatar IA';
+    } else {
+      takePlaceCoaching();
+      popup.classList.add('gold');
+      icon.textContent = '🤝';
+      title.textContent = '1 place prise !';
+      desc.textContent = 'Une place vient d\'être prise pour l\'accompagnement du jour';
+    }
+
+    popup.classList.add('show');
+    popup.style.animation = 'slideIn 0.4s ease';
+
+    setTimeout(function() {
+      popup.style.animation = 'slideOut 0.4s ease forwards';
+      setTimeout(function() {
+        popup.classList.remove('show');
+        popup.style.animation = '';
+      }, 400);
+    }, 4000);
+  }
+
+  // Timing : 15min → formation, +10min → coaching, +15min → formation, +30min → coaching
+  setTimeout(function(){ showNotif('formation'); }, 15 * 60 * 1000);
+  setTimeout(function(){ showNotif('coaching');  }, 25 * 60 * 1000);
+  setTimeout(function(){ showNotif('formation'); }, 40 * 60 * 1000);
+  setTimeout(function(){ showNotif('coaching');  }, 70 * 60 * 1000);
+</script>
 </body>
 </html>
