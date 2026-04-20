@@ -1,0 +1,286 @@
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+.bb-live-wrap {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  font-family: Outfit, sans-serif;
+  background: #050f05;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.bb-live-wrap::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(rgba(57,255,20,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(57,255,20,0.03) 1px, transparent 1px);
+  background-size: 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.bb-live-inner {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.bb-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  border: 2px solid #39FF14;
+  box-shadow: 0 0 20px rgba(57,255,20,0.4);
+  background: #0a1a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  margin-bottom: 14px;
+}
+
+.bb-name {
+  font-family: Bebas Neue, sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.08em;
+  color: #fff;
+  margin-bottom: 4px;
+}
+
+.bb-name span { color: #39FF14; }
+
+.bb-tagline {
+  font-size: 0.82rem;
+  color: #8aad8a;
+  text-align: center;
+  margin-bottom: 16px;
+  letter-spacing: 0.04em;
+}
+
+.bb-live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #000;
+  border: 1.5px solid #ff0050;
+  color: #fff;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 18px;
+  border-radius: 20px;
+  margin-bottom: 32px;
+  box-shadow: 0 0 14px rgba(255,0,80,0.35);
+}
+
+.bb-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #ff0050;
+  box-shadow: 0 0 6px #ff0050;
+  animation: bbpulse 1s ease-in-out infinite;
+}
+
+@keyframes bbpulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.7); }
+}
+
+.bb-places-wrap {
+  width: 100%;
+  background: #0d1f0d;
+  border: 1px solid rgba(57,255,20,0.2);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+
+.bb-places-wrap.gold {
+  background: #1a1400;
+  border-color: rgba(245,197,24,0.25);
+}
+
+.bb-places-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.bb-places-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #8aad8a;
+  letter-spacing: 0.06em;
+}
+
+.bb-places-wrap.gold .bb-places-title { color: #b8922a; }
+
+.bb-places-num {
+  font-family: Bebas Neue, sans-serif;
+  font-size: 1.1rem;
+  color: #39FF14;
+}
+
+.bb-places-wrap.gold .bb-places-num { color: #f5c518; }
+
+.bb-dots {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.bb-dot-place {
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 700;
+  transition: all 0.6s ease;
+  background: rgba(57,255,20,0.12);
+  border: 1px solid rgba(57,255,20,0.35);
+  color: #39FF14;
+}
+
+.bb-dot-place.gold-dot {
+  background: rgba(245,197,24,0.12);
+  border-color: rgba(245,197,24,0.35);
+  color: #f5c518;
+}
+
+.bb-dot-place.taken {
+  background: rgba(255,50,50,0.1);
+  border-color: rgba(255,50,50,0.4);
+  color: #ff5555;
+}
+
+.bb-notif-stack {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 8px;
+  z-index: 9999;
+  max-width: 260px;
+}
+
+@keyframes bbSlideIn {
+  from { opacity: 0; transform: translateX(-20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+</style>
+
+<div class="bb-live-wrap">
+  <div class="bb-live-inner">
+
+    <div class="bb-avatar">💡</div>
+    <div class="bb-name">Bill<span>Basic</span> Digital</div>
+    <div class="bb-tagline">Marketing Digital · Avatar IA · Business en ligne</div>
+
+    <div class="bb-live-badge">
+      <div class="bb-dot"></div>
+      Actuellement en live TikTok
+    </div>
+
+    <div class="bb-places-wrap">
+      <div class="bb-places-header">
+        <span class="bb-places-title">🎓 Places Formation</span>
+        <span class="bb-places-num" id="bb-f-count">8 / 8</span>
+      </div>
+      <div class="bb-dots" id="bb-f-dots"></div>
+    </div>
+
+    <div class="bb-places-wrap gold">
+      <div class="bb-places-header">
+        <span class="bb-places-title">🤝 Places Coaching du jour</span>
+        <span class="bb-places-num" id="bb-c-count">5 / 5</span>
+      </div>
+      <div class="bb-dots" id="bb-c-dots"></div>
+    </div>
+
+  </div>
+</div>
+
+<div class="bb-notif-stack" id="bb-notif-stack"></div>
+
+<script>
+var bbFTaken = 0;
+var bbCTaken = 0;
+
+function bbBuildDots(id, max, taken, isGold) {
+  var c = document.getElementById(id);
+  c.innerHTML = "";
+  for (var i = 0; i < max; i++) {
+    var d = document.createElement("div");
+    if (i < taken) {
+      d.className = "bb-dot-place taken";
+      d.textContent = "x";
+    } else {
+      d.className = isGold ? "bb-dot-place gold-dot" : "bb-dot-place";
+      d.textContent = "v";
+    }
+    c.appendChild(d);
+  }
+}
+
+function bbUpdatePlaces(type) {
+  if (type === "formation" && bbFTaken < 8) {
+    bbFTaken++;
+    bbBuildDots("bb-f-dots", 8, bbFTaken, false);
+    document.getElementById("bb-f-count").textContent = (8 - bbFTaken) + " / 8";
+  }
+  if (type === "coaching" && bbCTaken < 5) {
+    bbCTaken++;
+    bbBuildDots("bb-c-dots", 5, bbCTaken, true);
+    document.getElementById("bb-c-count").textContent = (5 - bbCTaken) + " / 5";
+  }
+}
+
+bbBuildDots("bb-f-dots", 8, 0, false);
+bbBuildDots("bb-c-dots", 5, 0, true);
+
+var bbNotifs = [
+  { type: "formation", icon: "🎓", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour la Formation Avatar IA", border: "#39FF14", delay: 2 * 60 * 1000 },
+  { type: "coaching",  icon: "🤝", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour l&apos;Accompagnement du jour", border: "#f5c518", delay: 5 * 60 * 1000 },
+  { type: "coaching",  icon: "🤝", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour l&apos;Accompagnement du jour", border: "#f5c518", delay: 9 * 60 * 1000 },
+  { type: "formation", icon: "🎓", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour la Formation Avatar IA", border: "#39FF14", delay: 14 * 60 * 1000 },
+  { type: "coaching",  icon: "🤝", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour l&apos;Accompagnement du jour", border: "#f5c518", delay: 22 * 60 * 1000 },
+  { type: "coaching",  icon: "🤝", title: "1 place prise !", desc: "Une place vient d&apos;etre prise pour l&apos;Accompagnement du jour", border: "#f5c518", delay: 41 * 60 * 1000 }
+];
+
+function bbCreateNotif(n) {
+  var stack = document.getElementById("bb-notif-stack");
+  var el = document.createElement("div");
+  el.style.background = "#0a1a0a";
+  el.style.border = "1px solid " + n.border + "55";
+  el.style.borderLeft = "3px solid " + n.border;
+  el.style.borderRadius = "12px";
+  el.style.padding = "12px 14px";
+  el.style.display = "flex";
+  el.style.gap = "10px";
+  el.style.alignItems = "flex-start";
+  el.style.boxShadow = "0 4px 20px rgba(0,0,0,0.7)";
+  el.style.animation = "bbSlideIn 0.4s ease";
+  el.innerHTML = "<div style=\"font-size:20px;flex-shrink:0;\">" + n.icon + "</div><div><div style=\"font-size:13px;font-weight:700;color:" + n.border + ";margin-bottom:3px;\">" + n.title + "</div><div style=\"font-size:11px;color:#8aad8a;\">" + n.desc + "</div><div style=\"font-size:10px;color:rgba(138,173,138,0.4);margin-top:3px;\">a linstant</div></div>";
+  stack.appendChild(el);
+  bbUpdatePlaces(n.type);
+}
+
+bbNotifs.forEach(function(n) {
+  setTimeout(function() { bbCreateNotif(n); }, n.delay);
+});
+</script>
