@@ -463,79 +463,67 @@
 
 </div>
 
-<!-- NOTIFICATION POPUP -->
-<div id="notif" style="
+<!-- NOTIFICATIONS STACK -->
+<div id="notif-stack" style="
   position:fixed;
-  bottom:20px;
+  bottom:16px;
   left:16px;
-  max-width:260px;
-  background:#0a1a0a;
-  border-radius:12px;
-  padding:12px 14px;
+  display:flex;
+  flex-direction:column-reverse;
+  gap:8px;
   z-index:9999;
-  display:none;
-  gap:10px;
-  align-items:flex-start;
-  box-shadow:0 4px 24px rgba(0,0,0,0.7);
-">
-  <div id="notif-icon" style="font-size:22px;flex-shrink:0;"></div>
-  <div>
-    <div id="notif-title" style="font-size:0.75rem;font-weight:700;margin-bottom:3px;"></div>
-    <div id="notif-desc" style="font-size:0.7rem;color:#8aad8a;line-height:1.45;"></div>
-    <div style="font-size:0.6rem;color:rgba(138,173,138,0.4);margin-top:4px;">à l'instant</div>
-  </div>
-</div>
+  max-width:260px;
+"></div>
 
 <script>
   var notifs = [
-    { type:'formation', icon:'🎓', title:'1 place prise !', desc:'Une place vient d\'être prise pour la Formation Avatar IA', border:'#39FF14' },
-    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518' },
-    { type:'formation', icon:'🎓', title:'1 place prise !', desc:'Une place vient d\'être prise pour la Formation Avatar IA', border:'#39FF14' },
-    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518' },
-    { type:'formation', icon:'🎓', title:'1 place prise !', desc:'Une place vient d\'être prise pour la Formation Avatar IA', border:'#39FF14' },
-    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518' },
+    { type:'formation', icon:'🎓', title:'1 place prise !', desc:'Une place vient d\'être prise pour la Formation Avatar IA', border:'#39FF14', delay: 10 * 60 * 1000 },
+    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518', delay: 16 * 60 * 1000 },
+    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518', delay: 23 * 60 * 1000 },
+    { type:'formation', icon:'🎓', title:'1 place prise !', desc:'Une place vient d\'être prise pour la Formation Avatar IA', border:'#39FF14', delay: 30 * 60 * 1000 },
+    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518', delay: 50 * 60 * 1000 },
+    { type:'coaching',  icon:'🤝', title:'1 place prise !', desc:'Une place vient d\'être prise pour l\'Accompagnement du jour', border:'#f5c518', delay: 60 * 60 * 1000 },
   ];
 
-  var notifIndex = 0;
+  function createNotif(n) {
+    var stack = document.getElementById('notif-stack');
 
-  function showNotif() {
-    if (notifIndex >= notifs.length) return;
+    var el = document.createElement('div');
+    el.style.cssText = [
+      'background:#0a1a0a',
+      'border:1px solid ' + n.border + '55',
+      'border-left:3px solid ' + n.border,
+      'border-radius:12px',
+      'padding:12px 14px',
+      'display:flex',
+      'gap:10px',
+      'align-items:flex-start',
+      'box-shadow:0 4px 20px rgba(0,0,0,0.7)',
+      'opacity:0',
+      'transform:translateX(-20px)',
+      'transition:opacity 0.4s ease, transform 0.4s ease',
+    ].join(';');
 
-    var n = notifs[notifIndex];
-    var el = document.getElementById('notif');
+    el.innerHTML =
+      '<div style="font-size:20px;flex-shrink:0;">' + n.icon + '</div>' +
+      '<div>' +
+        '<div style="font-size:0.74rem;font-weight:700;color:' + n.border + ';margin-bottom:3px;">' + n.title + '</div>' +
+        '<div style="font-size:0.69rem;color:#8aad8a;line-height:1.45;">' + n.desc + '</div>' +
+        '<div style="font-size:0.6rem;color:rgba(138,173,138,0.4);margin-top:4px;">à l\'instant</div>' +
+      '</div>';
 
-    document.getElementById('notif-icon').textContent  = n.icon;
-    document.getElementById('notif-title').textContent = n.title;
-    document.getElementById('notif-title').style.color = n.border;
-    document.getElementById('notif-desc').textContent  = n.desc;
+    stack.appendChild(el);
 
-    el.style.border      = '1px solid ' + n.border + '40';
-    el.style.borderLeft  = '3px solid ' + n.border;
-    el.style.display     = 'flex';
-    el.style.opacity     = '0';
-    el.style.transform   = 'translateX(-20px)';
-    el.style.transition  = 'opacity 0.4s ease, transform 0.4s ease';
-
-    setTimeout(function(){
+    // Slide in
+    setTimeout(function() {
       el.style.opacity   = '1';
       el.style.transform = 'translateX(0)';
     }, 50);
-
-    // Disparaît après 5 secondes
-    setTimeout(function(){
-      el.style.opacity   = '0';
-      el.style.transform = 'translateX(-20px)';
-      setTimeout(function(){ el.style.display = 'none'; }, 400);
-    }, 5000);
-
-    notifIndex++;
   }
 
-  // Première notification après 5 min, puis toutes les 5 min
-  setTimeout(function(){
-    showNotif();
-    setInterval(showNotif, 5 * 60 * 1000);
-  }, 5 * 60 * 1000);
+  notifs.forEach(function(n) {
+    setTimeout(function() { createNotif(n); }, n.delay);
+  });
 </script>
 </body>
 </html>
